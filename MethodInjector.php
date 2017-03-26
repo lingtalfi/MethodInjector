@@ -72,6 +72,9 @@ class MethodInjector
      */
     public function hasMethod($method, $className, $methodFilter = null)
     {
+        if ($method instanceof Method) {
+            $method = $method->getName();
+        }
         $list = $this->getMethodsList($className, $methodFilter);
         foreach ($list as $methodName) {
             if ($method === $methodName) {

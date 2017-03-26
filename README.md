@@ -64,6 +64,10 @@ foreach ($methods as $method) {
 History Log
 ------------------
 
+- 1.3.2 -- 2017-03-26
+
+    - fix hasMethod
+    
 - 1.3.1 -- 2017-03-26
 
     - fix filters

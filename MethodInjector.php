@@ -11,6 +11,12 @@ use MethodInjector\Method\Method;
 class MethodInjector
 {
 
+    public static function create()
+    {
+        return new static();
+    }
+
+
     public function getMethodsList($className, $methodFilter = null)
     {
         $ret = [];
@@ -67,6 +73,28 @@ class MethodInjector
         $s .= PHP_EOL;
         $s .= $b;
         file_put_contents($file, $s);
+    }
+
+
+    public function removeMethod(Method $method, $className)
+    {
+        try {
+
+            $r = new \ReflectionMethod($className, $method->getName());
+            $file = $r->getFileName();
+            $start = $r->getStartLine();
+            $end = $r->getEndLine();
+
+
+            header("Content-Type: text/plain");
+            list($a, $b) = FileTool::cut($file, $start, $end);
+            $s = $a;
+            $s .= PHP_EOL;
+            $s .= $b;
+            file_put_contents($file, $s);
+        } catch (\ReflectionException $e) {
+            // method not found in container
+        }
     }
 
 

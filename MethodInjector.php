@@ -17,19 +17,42 @@ class MethodInjector
     }
 
 
-    public function getMethodsList($className, $methodFilter = null)
+    /**
+     * methodFilter: an array of OR items.
+     *      An OR item is an array of reflection method flags.
+     *      And each OR item is combined in an AND fashion.
+     *
+     * So for instance with the following methodFilter array:
+     *
+     * - 0: [\ReflectionMethod::IS_STATIC]
+     * - 1: [\ReflectionMethod::IS_PROTECTED, \ReflectionMethod::IS_PUBLIC]
+     *
+     * we have two OR items (at index 0 and 1),
+     * and it basically means: get the methods that are static and (protected or public).
+     *
+     *
+     *
+     *
+     *
+     */
+    public function getMethodsList($className, array $methodFilter = null)
     {
         $ret = [];
         $r = new \ReflectionClass($className);
         if (null === $methodFilter) {
-            $methodFilter = \ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC;
+            $methodFilter = [
+                [\ReflectionMethod::IS_PUBLIC],
+            ];
         }
-        $methods = $r->getMethods($methodFilter);
+        $methods = $r->getMethods();
         foreach ($methods as $method) {
-            $ret[] = $method->getName();
+            if (true === $this->matchFilter($method, $methodFilter)) {
+                $ret[] = $method->getName();
+            }
         }
         return $ret;
     }
+
 
     /**
      * @return Method
@@ -83,10 +106,8 @@ class MethodInjector
             $start = $r->getStartLine();
             $end = $r->getEndLine();
 
-
-            header("Content-Type: text/plain");
             list($a, $b) = FileTool::cut($file, $start, $end);
-            $s = $a;
+            $s = trim($a);
             $s .= PHP_EOL;
             $s .= $b;
             file_put_contents($file, $s);
@@ -96,4 +117,49 @@ class MethodInjector
     }
 
 
+    //--------------------------------------------
+    //
+    //--------------------------------------------
+    private function matchFilter(\ReflectionMethod $method, $methodFilter)
+    {
+        $isSuccess = true;
+        foreach ($methodFilter as $orItem) {
+            $orItemMatched = false;
+            foreach ($orItem as $flag) {
+                if (true === $this->matchFlag($method, $flag)) {
+                    $orItemMatched = true;
+                    break;
+                }
+            }
+            if (false === $orItemMatched) {
+                $isSuccess = false;
+                break;
+            }
+        }
+        return $isSuccess;
+    }
+
+    private function matchFlag(\ReflectionMethod $method, $flag)
+    {
+        switch ($flag) {
+            case \ReflectionMethod::IS_PUBLIC:
+                return $method->isPublic();
+                break;
+            case \ReflectionMethod::IS_PROTECTED:
+                return $method->isProtected();
+                break;
+            case \ReflectionMethod::IS_PRIVATE:
+                return $method->isPrivate();
+                break;
+            case \ReflectionMethod::IS_ABSTRACT:
+                return $method->isAbstract();
+                break;
+            case \ReflectionMethod::IS_FINAL:
+                return $method->isFinal();
+                break;
+            case \ReflectionMethod::IS_STATIC:
+                return $method->isStatic();
+                break;
+        }
+    }
 }

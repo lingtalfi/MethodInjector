@@ -63,6 +63,11 @@ foreach ($methods as $method) {
 
 History Log
 ------------------
+
+- 1.3.0 -- 2017-03-26
+
+    - hasMethod can now choose its filters
+    
 - 1.2.0 -- 2017-03-26
 
     - add removeMethod

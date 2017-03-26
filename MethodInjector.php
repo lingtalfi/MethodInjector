@@ -47,17 +47,15 @@ class MethodInjector
     /**
      *
      */
-    public function hasMethod($method, $className)
+    public function hasMethod($method, $className, $methodFilter = null)
     {
-        if ($method instanceof Method) {
-            $method = $method->getName();
+        $list = $this->getMethodsList($className, $methodFilter);
+        foreach ($list as $methodName) {
+            if ($method === $methodName) {
+                return true;
+            }
         }
-        try {
-            new \ReflectionMethod($className, $method);
-        } catch (\ReflectionException $e) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public function appendMethod(Method $method, $className)

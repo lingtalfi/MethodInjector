@@ -11,11 +11,14 @@ use MethodInjector\Method\Method;
 class MethodInjector
 {
 
-    public function getMethodsList($className)
+    public function getMethodsList($className, $methodFilter = null)
     {
         $ret = [];
         $r = new \ReflectionClass($className);
-        $methods = $r->getMethods(\ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC);
+        if (null === $methodFilter) {
+            $methodFilter = \ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC;
+        }
+        $methods = $r->getMethods($methodFilter);
         foreach ($methods as $method) {
             $ret[] = $method->getName();
         }

@@ -63,6 +63,10 @@ foreach ($methods as $method) {
 
 History Log
 ------------------
+- 1.1.0 -- 2017-03-26
+
+    - getMethodsList can now choose its filters
+    
 - 1.0.0 -- 2017-03-24
 
     - initial commit

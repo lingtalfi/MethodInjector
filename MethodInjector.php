@@ -38,7 +38,11 @@ class MethodInjector
     public function getMethodsList($className, array $methodFilter = null)
     {
         $ret = [];
-        $r = new \ReflectionClass($className);
+        try {
+            $r = new \ReflectionClass($className);
+        } catch (\ReflectionException $e) {
+            return $ret;
+        }
         if (null === $methodFilter) {
             $methodFilter = [
                 [\ReflectionMethod::IS_PUBLIC],
@@ -55,15 +59,29 @@ class MethodInjector
 
 
     /**
-     * @return Method
+     * @return Method|false
      */
     public function getMethodByName($className, $methodName)
     {
-        $c = ClassTool::getMethodContent($className, $methodName);
-        $o = new Method();
-        $o->setContent($c);
-        $o->setName($methodName);
-        return $o;
+        if (false !== ($c = ClassTool::getMethodContent($className, $methodName))) {
+            $o = new Method();
+            $o->setContent($c);
+            $o->setName($methodName);
+            return $o;
+        }
+        return false;
+    }
+
+
+    /**
+     * @return Method|false
+     */
+    public function replaceMethodByInnerContent($className, $methodName, $newContent)
+    {
+        $newContentAsLines = explode(PHP_EOL, $newContent);
+        ClassTool::rewriteMethodContent($className, $methodName, function (array &$lines) use ($newContentAsLines) {
+            $lines = $newContentAsLines;
+        });
     }
 
 

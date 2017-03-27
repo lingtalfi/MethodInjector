@@ -64,9 +64,12 @@ foreach ($methods as $method) {
 History Log
 ------------------
 
-- 1.3.2 -- 2017-03-26
+- 1.4.0 -- 2017-03-26
 
-    - fix hasMethod
+    - add Method.getInnerContent
+    - add MethodInjector.replaceMethodByInnerContent
+    - fix change algorithm
+    - fix getMethodByName can now return false
     
 - 1.3.1 -- 2017-03-26
 

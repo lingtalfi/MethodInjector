@@ -64,6 +64,10 @@ foreach ($methods as $method) {
 History Log
 ------------------
 
+- 1.5.0 -- 2017-04-04
+
+    - add Method.removeMethods
+    
 - 1.4.0 -- 2017-03-26
 
     - add Method.getInnerContent

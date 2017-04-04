@@ -137,6 +137,34 @@ class MethodInjector
         }
     }
 
+    /**
+     *
+     *
+     * @param Method[] $methods
+     * http://stackoverflow.com/questions/6220154/php-object-definitions-cached-trouble-deleting-methods-with-reflection
+     */
+    public function removeMethods(array $methods, $className)
+    {
+
+        $slices = [];
+        $file = null;
+        foreach ($methods as $method) {
+            try {
+                $r = new \ReflectionMethod($className, $method->getName());
+                $file = $r->getFileName();
+                $slices[] = [$r->getStartLine(), $r->getEndLine()];
+            } catch (\ReflectionException $e) {
+                // method not found, ignore that slice
+            }
+        }
+
+
+        if (null !== $file) {
+            $s = FileTool::extract($file, $slices);
+            file_put_contents($file, $s);
+        }
+    }
+
 
     //--------------------------------------------
     //

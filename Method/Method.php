@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MethodInjector\Method;
+namespace Ling\MethodInjector\Method;
 
 
 class Method

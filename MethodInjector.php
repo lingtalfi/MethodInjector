@@ -1,12 +1,12 @@
 <?php
 
 
-namespace MethodInjector;
+namespace Ling\MethodInjector;
 
 
-use Bat\ClassTool;
-use Bat\FileTool;
-use MethodInjector\Method\Method;
+use Ling\Bat\ClassTool;
+use Ling\Bat\FileTool;
+use Ling\MethodInjector\Method\Method;
 
 class MethodInjector
 {

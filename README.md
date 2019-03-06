@@ -15,7 +15,7 @@ Install
 Using the universe naive importer:
 
 ```bash
-uni import MethodInjector
+uni import Ling/MethodInjector
 ```
 
 
@@ -27,7 +27,7 @@ Example
 <?php
 
 
-use MethodInjector\MethodInjector;
+use Ling\MethodInjector\MethodInjector;
 
 
 ini_set("display_errors", 1);
